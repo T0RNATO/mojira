@@ -1,12 +1,14 @@
 <script setup lang="ts">
-async function awd() {
-    const awd = await $fetch('/api/creds');
-    console.log(awd);
-}
+const { data } = await useFetch("/api/issue", {
+    method: "POST",
+    body: {id: "MC-295859"},
+});
 </script>
 
 <template>
-    <button @click="awd">hi</button>
+<div>
+    {{data}}
+</div>
 </template>
 
 <style scoped>
