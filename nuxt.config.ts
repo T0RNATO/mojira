@@ -4,9 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/ui'],
   runtimeConfig: {
-    public: {
-      email: process.env.email,
-      password: process.env.password,
-    }
+    email: process.env.email,
+    password: process.env.password,
   }
 })
