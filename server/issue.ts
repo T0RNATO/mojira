@@ -1,15 +1,18 @@
+import {getToken} from "~/server/log_in";
+
 export const getIssueDetails = defineCachedFunction(async (id: string): Promise<IssueRequest> => {
-    return await (await fetch("https://bugs.mojang.com/api/jql-search-post", {
+    return await (await fetch("https://report.bugs.mojang.com/rest/servicedesk/1/customer/models\n", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Cookie": `customer.account.session.token=${await getToken()}`
         },
         body: JSON.stringify({
-            advanced: true,
-            project: "MC",
-            startAt: 0,
-            maxResults: 1,
-            search: `key = "${id}"`
+            options: {
+                reqDetails: {key: id, portalId: 2},
+                portalId: 2
+            },
+            models: ["reqDetails"],
         })
     })).json()
 }, {
