@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+body {
+    @apply p-2 dark:bg-slate-800 bg-slate-100;
+}
+
+div.preformatted.panel {
+    border-width: 0 !important;
+}
+
+h1 {
+    @apply font-bold text-3xl dark:text-white;
+}
+
+hr {
+    @apply border-gray-300 my-2;
+}
+
+@media (prefers-color-scheme: dark) {
+    pre {
+        scrollbar-color: theme(color.slate.700) theme(color.slate.600);
+        /*&::-webkit-scrollbar {*/
+        /*    @apply bg-slate-700 rounded-b-sm;*/
+        /*}*/
+        /*&::-webkit-scrollbar-thumb {*/
+        /*    @apply bg-slate-600 rounded-sm;*/
+        /*}*/
+    }
+}
