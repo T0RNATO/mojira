@@ -9,8 +9,12 @@ div.preformatted.panel {
     border-width: 0 !important;
 }
 
-h1 {
+h1, h2 {
     @apply font-bold text-3xl dark:text-white;
+}
+
+.window {
+    @apply dark:text-white dark:bg-slate-700 bg-slate-200 p-4 rounded-md;
 }
 
 hr {

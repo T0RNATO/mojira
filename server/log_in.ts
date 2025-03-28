@@ -13,12 +13,12 @@ const token: Cookie = {
     expires: null
 }
 
-export async function getToken() {
+export async function getToken(): Promise<string> {
     if (token.token && Date.now() < token.expires.getTime()) {
         return token.token;
     }
     await refreshToken()
-    return token.token;
+    return token.token!;
 }
 
 export async function refreshToken() {
