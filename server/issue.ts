@@ -1,4 +1,5 @@
 import {getToken} from "~/server/log_in";
+import {ADFDoc} from "~/components/adf/types";
 
 export const getIssueDetails = defineCachedFunction(async (id: string):
     Promise<[AuthenticatedIssueRequest, UnAuthIssueRequest, AttachmentRequest | null]> =>
@@ -75,6 +76,7 @@ type UnAuthIssueRequest = {
         key: string;
         renderedFields: Record<"description" | string, string>;
         fields: {
+            description: ADFDoc;
             customfield_10070: number;
             summary: string;
             resolution: {
@@ -117,12 +119,13 @@ type AuthenticatedIssueRequest = {
             friendlyDate: string;
             // fields: {}[];
             activityStream: {
-                type: "requester-comment";
+                type: "requester-comment" | "worker-comment";
                 date: string;
                 author: string;
                 avatarUrl: string;
                 comment: string;
                 rawComment: string;
+                adfComment: string;
                 friendlyDate: string;
             }[]
         }
@@ -158,6 +161,7 @@ type AttachmentRequest = {
 }
 
 type Artifact = {
-    cdnUrl: string;
+    cdnUrl?: string;
+    url?: string;
     mimeType: string;
 }
