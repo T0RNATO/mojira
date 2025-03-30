@@ -1,13 +1,14 @@
 import {getIssueDetails} from "~/server/issue";
 import {ADFDoc} from "~/components/adf/types";
-import {getToken} from "~/server/log_in";
+import {processAttachment} from "~/server/attachment";
 
 export default defineEventHandler(async (ev): Promise<Issue> => {
     const body = await readBody(ev);
     const [{reqDetails: auth}, unauthReq, attachments] = await getIssueDetails(body.id);
     const unauth = unauthReq.issues[0];
 
-    console.log(await getToken());
+    const mediaToken = auth.readFileMediaCredentials.tokensWithFiles[0]?.token;
+    const mediaClientId = auth.readFileMediaCredentials.clientId;
 
     return {
         key: auth.key,
@@ -28,7 +29,7 @@ export default defineEventHandler(async (ev): Promise<Issue> => {
                     return [att.id, {
                         type: "image",
                         name: att.details.name,
-                        url: att.details.artifacts["image.jpg"]?.cdnUrl || 'https://media-cdn.atlassian.com/eu-central-1/v1/cdn' + att.details.artifacts["image.jpg"].url
+                        url: processAttachment(att, "image.jpg", mediaToken, mediaClientId),
                     }]
                 }
                 case "video": {
@@ -43,6 +44,13 @@ export default defineEventHandler(async (ev): Promise<Issue> => {
                         type: "archive",
                         name: att.details.name,
                         url: "Unsupported"
+                    }]
+                }
+                case "doc": {
+                    return [att.id, {
+                        type: "doc",
+                        name: att.details.name,
+                        url: processAttachment(att, "document.txt", mediaToken, mediaClientId),
                     }]
                 }
                 default: {

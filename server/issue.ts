@@ -1,6 +1,8 @@
 import {getToken} from "~/server/log_in";
 import {ADFDoc} from "~/components/adf/types";
 
+const env = useRuntimeConfig();
+
 export const getIssueDetails = defineCachedFunction(async (id: string):
     Promise<[AuthenticatedIssueRequest, UnAuthIssueRequest, AttachmentRequest | null]> =>
 {
@@ -63,7 +65,7 @@ export const getIssueDetails = defineCachedFunction(async (id: string):
 
     return [issueAuth, issueUnAuth, attachments];
 }, {
-    maxAge: 20 * 60,
+    maxAge: env.cacheMinutes * 60,
     name: 'issue',
     getKey(id: string) {
         return id
@@ -143,7 +145,7 @@ type AuthenticatedIssueRequest = {
     }
 }
 
-type AttachmentRequest = {
+export type AttachmentRequest = {
     data: {
         items: {
             id: string;
@@ -152,7 +154,7 @@ type AttachmentRequest = {
                 artifacts: {
                     [a: string]: Artifact
                 }
-                mediaType: "image" | "video" | "archive";
+                mediaType: "image" | "video" | "archive" | "doc";
                 mimeType: string;
                 name: string;
             }
@@ -160,7 +162,7 @@ type AttachmentRequest = {
     }
 }
 
-type Artifact = {
+export type Artifact = {
     cdnUrl?: string;
     url?: string;
     mimeType: string;

@@ -6,5 +6,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     email: process.env.email,
     password: process.env.password,
+    cacheMinutes: process.env.cacheMinutes,
   }
 })

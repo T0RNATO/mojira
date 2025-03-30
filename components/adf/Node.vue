@@ -43,6 +43,7 @@ function getMark(node: ADFNode, mark: string): ADFMark {
     <div       v-else-if="node.type === 'expand'">{{node.attrs?.title || ''}}<div class="ml-4"><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></div></div> <!--todo-->
     <span      v-else-if="node.type === 'date'">{{new Date(node.attrs.timestamp)}}</span>
     <span      v-else-if="node.type === 'emoji'">{{node.text}}</span>
+    <a         v-else-if="node.type === 'inlineCard'" :href="node.attrs?.url">{{node.attrs?.url}}</a>
     <div v-else>{'{{node.type}}'} Node (No Defined Rendering)</div> <!--todo: tables, blockquote, etc. docs: https://developer.atlassian.com/cloud/jira/platform/apis/document/nodes/table/-->
 </template>
 
