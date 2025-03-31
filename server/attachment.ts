@@ -28,7 +28,7 @@ export function processAttachment(att: AttachmentRequest["data"]["items"][number
         token,
         clientId,
         url: att.details.artifacts[artifact].url!,
-        removeAt: Date.now() + env.cacheMinutes * 60 * 1000
+        removeAt: Date.now() + Number(env.cacheMinutes) * 60 * 1000
     }
     return "/api/image/" + att.id;
 }

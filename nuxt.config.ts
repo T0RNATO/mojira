@@ -7,5 +7,11 @@ export default defineNuxtConfig({
     email: process.env.email,
     password: process.env.password,
     cacheMinutes: process.env.cacheMinutes,
+  },
+  nitro: {
+    preset: 'cloudflare_pages',
+    prerender: {
+      autoSubfolderIndex: false
+    }
   }
 })

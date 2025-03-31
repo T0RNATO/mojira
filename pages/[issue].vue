@@ -2,9 +2,10 @@
 import Comment from "~/components/Comment.vue";
 import Render from "~/components/adf/Render.vue";
 import type {ADFDoc} from "~/components/adf/types";
+import type {Issue} from "~/server/api/issue";
 
 const route = useRoute();
-const { data: issue, status } = await useFetch("/api/issue", {
+const { data: issue, status } = await useFetch<Issue>("/api/issue", {
     method: "POST",
     body: {id: route.params.issue},
 });

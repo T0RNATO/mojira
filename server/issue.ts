@@ -65,7 +65,7 @@ export const getIssueDetails = defineCachedFunction(async (id: string):
 
     return [issueAuth, issueUnAuth, attachments];
 }, {
-    maxAge: env.cacheMinutes * 60,
+    maxAge: Number(env.cacheMinutes) * 60,
     name: 'issue',
     getKey(id: string) {
         return id
