@@ -1,6 +1,6 @@
-import {getIssueDetails} from "~/server/issue";
+import {getIssueDetails} from "~/server/logic/issues";
 import {ADFDoc} from "~/components/adf/types";
-import {processAttachment} from "~/server/attachment";
+import {processAttachment} from "~/server/logic/attachments";
 
 export default defineEventHandler(async (ev): Promise<Issue> => {
     const body = await readBody(ev);
@@ -23,6 +23,8 @@ export default defineEventHandler(async (ev): Promise<Issue> => {
         mojangPriority: unauth.fields?.customfield_10049?.value || null,
         confirmation: unauth.fields.customfield_10054.value,
         affectsVersions: unauth.fields.versions,
+        reporter: auth.reporter,
+        comments: auth.issue.activityStream.filter(item => item.type === "requester-comment" || item.type === "worker-comment"),
         attachments: attachments ? Object.fromEntries(attachments.data.items.map(att => {
             switch (att.details.mediaType) {
                 case "image": {
@@ -58,8 +60,6 @@ export default defineEventHandler(async (ev): Promise<Issue> => {
                 }
             }
         })): null,
-        reporter: auth.reporter,
-        comments: auth.issue.activityStream.filter(item => item.type === "requester-comment" || item.type === "worker-comment")
     }
 })
 

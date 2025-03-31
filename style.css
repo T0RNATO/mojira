@@ -2,11 +2,33 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-    color-scheme: light dark;
+    --c1: theme(color.slate.100);
+    --c2: theme(color.slate.200);
+    --c3: theme(color.slate.300);
+    --c9: theme(color.slate.800);
+}
+
+@theme {
+    --color-c1: var(--c1);
+    --color-c2: var(--c2);
+    --color-c3: var(--c3);
+    --color-c9: var(--c9);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --c1: theme(color.slate.800);
+        --c2: theme(color.slate.700);
+        --c3: theme(color.slate.600);
+        --c9: theme(color.slate.300);
+    }
+    pre {
+        scrollbar-color: theme(color.slate.700) theme(color.slate.600);
+    }
 }
 
 body {
-    @apply p-4 dark:bg-slate-800 bg-slate-100 dark:text-slate-300 text-slate-800;
+    @apply bg-c1 text-c9;
 }
 
 div.preformatted.panel {
@@ -22,21 +44,9 @@ a {
 }
 
 .window {
-    @apply dark:text-white dark:bg-slate-700 bg-slate-200 p-4 rounded-md;
+    @apply text-c9 bg-c2 p-4 rounded-md;
 }
 
 hr {
     @apply border-gray-300 my-2;
-}
-
-@media (prefers-color-scheme: dark) {
-    pre {
-        scrollbar-color: theme(color.slate.700) theme(color.slate.600);
-        /*&::-webkit-scrollbar {*/
-        /*    @apply bg-slate-700 rounded-b-sm;*/
-        /*}*/
-        /*&::-webkit-scrollbar-thumb {*/
-        /*    @apply bg-slate-600 rounded-sm;*/
-        /*}*/
-    }
 }

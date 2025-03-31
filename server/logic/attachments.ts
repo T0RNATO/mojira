@@ -1,5 +1,5 @@
-import type {AttachmentRequest} from "~/server/issue";
-const env = useRuntimeConfig();
+import type {AttachmentRequest} from "~/server/logic/issues";
+import {ATTACHMENT_URL, CACHE_MINUTES} from "~/server/util/constants";
 
 const attachments: Record<string, {token: string, clientId: string, url: string, removeAt: number}> = {};
 
@@ -12,7 +12,7 @@ export async function getAttachment(id: string): Promise<Blob | null> {
     }
     if (!(id in attachments)) return null;
     const {token, clientId, url} = attachments[id];
-    const req = await fetch("https://api.media.atlassian.com" + url, {
+    const req = await fetch(ATTACHMENT_URL + url, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export function processAttachment(att: AttachmentRequest["data"]["items"][number
         token,
         clientId,
         url: att.details.artifacts[artifact].url!,
-        removeAt: Date.now() + Number(env.cacheMinutes) * 60 * 1000
+        removeAt: Date.now() + CACHE_MINUTES * 60 * 1000
     }
     return "/api/image/" + att.id;
 }

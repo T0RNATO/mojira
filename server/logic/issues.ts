@@ -1,16 +1,14 @@
-import {getToken} from "~/server/log_in";
+import {getToken} from "~/server/logic/auth";
 import {ADFDoc} from "~/components/adf/types";
-
-const env = useRuntimeConfig();
+import {CACHE_MINUTES, PRIVATE_ISSUE_API, PUBLIC_ISSUE_API} from "~/server/util/constants";
 
 export const getIssueDetails = defineCachedFunction(async (id: string):
-    Promise<[AuthenticatedIssueRequest, UnAuthIssueRequest, AttachmentRequest | null]> =>
+    Promise<[PrivateIssueJSON, PublicIssueJSON, AttachmentRequest | null]> =>
 {
     const token = await getToken();
 
-    // @ts-ignore
-    const [issueAuth, issueUnAuth]: [AuthenticatedIssueRequest, UnAuthIssueRequest] = await Promise.all((await Promise.all([
-        fetch("https://report.bugs.mojang.com/rest/servicedesk/1/customer/models", {
+    const [issueAuth, issueUnAuth]: [PrivateIssueJSON, PublicIssueJSON] = await Promise.all((await Promise.all([
+        fetch(PRIVATE_ISSUE_API, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -22,9 +20,10 @@ export const getIssueDetails = defineCachedFunction(async (id: string):
                     portalId: 2
                 },
                 models: ["reqDetails"],
-            })
+            }),
+            signal: AbortSignal.timeout(30 * 1000)
         }),
-        fetch("https://bugs.mojang.com/api/jql-search-post", {
+        fetch(PUBLIC_ISSUE_API, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,9 +34,10 @@ export const getIssueDetails = defineCachedFunction(async (id: string):
                 startAt: 0,
                 maxResults: 1,
                 search: `key = "${id}"`
-            })
+            }),
+            signal: AbortSignal.timeout(30 * 1000)
         })
-    ])).map(res => res.json()))
+    ])).map(res => res.json())) as [PrivateIssueJSON, PublicIssueJSON];
 
     const attachmentIds = [];
 
@@ -65,14 +65,14 @@ export const getIssueDetails = defineCachedFunction(async (id: string):
 
     return [issueAuth, issueUnAuth, attachments];
 }, {
-    maxAge: Number(env.cacheMinutes) * 60,
+    maxAge: CACHE_MINUTES * 60,
     name: 'issue',
     getKey(id: string) {
         return id
     }
 })
 
-type UnAuthIssueRequest = {
+type PublicIssueJSON = {
     total: number; // number of results returned
     issues: {
         key: string;
@@ -107,7 +107,7 @@ type UnAuthIssueRequest = {
     names: Record<string, string>;
 }
 
-type AuthenticatedIssueRequest = {
+type PrivateIssueJSON = {
     reqDetails: {
         reporter: {
             displayName: string;
@@ -119,7 +119,6 @@ type AuthenticatedIssueRequest = {
             status: string;
             date: string;
             friendlyDate: string;
-            // fields: {}[];
             activityStream: {
                 type: "requester-comment" | "worker-comment";
                 date: string;

@@ -64,7 +64,7 @@ const affectedVersions = computed(() => {
         <Render :doc="issue.description as ADFDoc" :att="issue.attachments"/>
     </div>
     <h2>Comments</h2>
-    <div v-for="comment in issue.comments" class="dark:text-slate-300 window mb-2" v-if="issue.comments.length">
+    <div v-for="comment in issue.comments" class="text-c9 window mb-2" v-if="issue.comments.length">
         <Comment :comment="comment" :attachments="issue.attachments"/>
     </div>
     <div v-else>
