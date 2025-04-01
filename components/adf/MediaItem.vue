@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {Issue} from "~/server/api/issue";
 import type {Media} from "~/components/adf/types";
-
 const props = defineProps<{
     media: Media
     att: Issue["attachments"]
@@ -21,11 +20,28 @@ if (attachment.type === "doc") {
     }))
 }
 
+function closeModal(ev: KeyboardEvent) {
+    if (ev.key === "Escape") {
+        modalOpen.value = false;
+    }
+}
+
+onMounted(() => {
+    document.body.addEventListener("keyup", closeModal);
+})
+onUnmounted(() => {
+    document.body.removeEventListener("keyup", closeModal);
+})
+
 const modalOpen = ref(false);
+const videoPlayerVisible = ref(false);
 </script>
 
 <template>
-    <video v-if="attachment.type === 'video'" :src="attachment.url" controls="controls" class="inline-block w-80 align-baseline"/>
+    <div v-if="attachment.type === 'video'" class="relative" @click="videoPlayerVisible = true">
+        <video :src="attachment.url" class="inline-block w-80 align-baseline" :controls="videoPlayerVisible ? 'controls' : false" @blur="videoPlayerVisible = false"/>
+        <img class="absolute top-1/2 left-1/2 -translate-1/2 w-16 h-16 rotate-90 select-none" draggable="false" src="/play_button.svg" v-if="!videoPlayerVisible">
+    </div>
     <img v-else-if="attachment.type === 'image'" :src="attachment.url" :alt="attachment.name" class="inline-block w-80 align-baseline" @click="modalOpen = true">
     <div v-else-if="attachment.type === 'archive'" class="window">File Download: <span class="rounded-sm bg-black/20">{{attachment.name}}</span> (Unsupported)</div>
     <div v-else-if="attachment.type === 'doc'" @click="modalOpen = true" class="relative inline-block w-80 h-60 p-4 bg-c1 rounded-lg">
@@ -34,7 +50,9 @@ const modalOpen = ref(false);
     </div>
     <div v-else>Unsupported attachment type "{{attachment.type}}": <a :href="attachment.url">{{attachment.name}}</a>.</div>
 
-    <div class="fixed w-screen h-screen top-0 left-0 bg-black/30 flex items-center justify-center backdrop-blur-xs" v-if="modalOpen" @click="modalOpen = false">
+    <div class="fixed w-screen h-screen top-0 left-0 bg-black/30 flex items-center justify-center backdrop-blur-xs z-10"
+         v-if="modalOpen" @click="modalOpen = false"
+    >
         <img v-if="attachment.type === 'image'" :src="attachment.url" :alt="attachment.name" class="max-w-[90%] max-h-[90%] min-w-[70%]" @click.stop>
         <pre v-else-if="attachment.type === 'doc'" class="w-[80%] h-[80%] window overflow-auto" @click.stop>{{doc}}</pre>
     </div>

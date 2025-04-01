@@ -99,7 +99,7 @@ export type Issue = {
         [id: string]: {
             url: string;
             name: string;
-            type: "image" | "video" | "archive";
+            type: "image" | "video" | "archive" | "doc";
         }
     } | null;
 }

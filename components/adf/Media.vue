@@ -11,9 +11,14 @@ defineProps<{
 </script>
 
 <template>
-<template v-for="media in node.content">
-    <MediaItem :media="media" :att="att"/>
-</template>
+    <div v-if="node.type === 'mediaGroup'" class="flex flex-wrap gap-2">
+        <div v-for="media in node.content">
+            <MediaItem :media="media" :att="att"/>
+        </div>
+    </div>
+    <div v-else>
+        <MediaItem :media="node.content[0]" :att="att"/>
+    </div>
 </template>
 
 <style scoped>
