@@ -34,12 +34,13 @@ function getMark(node: ADFNode, mark: string): ADFMark {
     <span      v-else-if="node.type === 'text'" :class="formatting(node)">{{node.text}}</span>
     <span      v-else-if="node.type === 'mention'" class="rounded-sm bg-white/10 font-semibold">{{node.attrs?.text || '@unknown'}}</span>
     <br        v-else-if="node.type === 'hardBreak'"/>
+    <hr        v-else-if="node.type === 'rule'"/>
     <Media     v-else-if="node.type === 'mediaSingle' || node.type === 'mediaGroup'" :node="node as MediaNode" :att="att"/>
     <component v-else-if="node.type === 'heading'" :is="'h' + (node.attrs?.level || 1)"><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></component>
     <ol        v-else-if="node.type === 'orderedList'"><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></ol>
     <ul        v-else-if="node.type === 'bulletList'" ><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></ul>
     <li        v-else-if="node.type === 'listItem'"   ><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></li>
-    <pre       v-else-if="node.type === 'codeBlock'"  ><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></pre>
+    <pre       v-else-if="node.type === 'codeBlock'" class="whitespace-break-spaces"><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></pre>
     <div       v-else-if="node.type === 'expand'">{{node.attrs?.title || ''}}<div class="ml-4"><RenderAdf :att="att" :doc="node as ADFDoc" v-if="node.content"/></div></div> <!--todo-->
     <span      v-else-if="node.type === 'date'">{{new Date(node.attrs.timestamp)}}</span>
     <span      v-else-if="node.type === 'emoji'">{{node.text}}</span>

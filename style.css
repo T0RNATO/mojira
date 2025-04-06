@@ -41,6 +41,7 @@ h1, h2 {
 
 a {
     @apply dark:text-blue-300 text-blue-600;
+    word-wrap: break-word;
 }
 
 .window {
