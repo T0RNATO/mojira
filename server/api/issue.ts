@@ -23,6 +23,7 @@ export default defineEventHandler(async (ev): Promise<Issue> => {
         mojangPriority: unauth.fields?.customfield_10049?.value || null,
         confirmation: unauth.fields.customfield_10054.value,
         affectsVersions: unauth.fields.versions,
+        fixVersions: unauth.fields.fixVersions,
         reporter: auth.reporter,
         comments: auth.issue.activityStream.filter(item => item.type === "requester-comment" || item.type === "worker-comment"),
         attachments: attachments ? Object.fromEntries(attachments.data.items.map(att => {
@@ -91,6 +92,11 @@ export type Issue = {
     mojangPriority: string | null;
     confirmation: string | null;
     affectsVersions: {
+        name: string;
+        released: boolean;
+        releaseDate: string;
+    }[];
+    fixVersions: {
         name: string;
         released: boolean;
         releaseDate: string;

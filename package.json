@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "deploy": "nuxt build && bunx wrangler pages deploy",
+    "deploy": "wrangler pages deploy",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

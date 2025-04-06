@@ -39,6 +39,14 @@ const affectedVersions = computed(() => {
     }
     return v;
 })
+
+const fixVersions = computed(() => {
+    const v = issue.value!.fixVersions.map(v => v.name);
+    if (v.length > 5) {
+        return [v[0], v[1], "...", v.at(-2), v.at(-1)];
+    }
+    return v;
+})
 </script>
 
 <template>
@@ -56,6 +64,7 @@ const affectedVersions = computed(() => {
         <span class="font-semibold mr-2">Mojang Priority:</span>{{issue.mojangPriority || "None"}}<br/>
         <span class="font-semibold mr-2">Affected Versions:</span>{{affectedVersions.join(", ")}}<br/>
         <span class="font-semibold mr-2">Confirmation:</span>{{issue.confirmation}}<br/>
+        <span class="font-semibold mr-2">Fix Versions:</span>{{fixVersions.join(", ")}}<br/>
         <span class="font-semibold mr-2">Resolution:</span>{{issue?.resolution?.name || "None"}}<br/>
         <span class="font-semibold mr-2">Votes:</span>{{issue.votes || 0}}<br/>
         <span class="font-semibold mr-2">Watchers:</span>{{issue.watchers}}<br/>

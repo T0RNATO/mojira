@@ -92,6 +92,11 @@ type PublicIssueJSON = {
                 released: boolean;
                 releaseDate: string;
             }[];
+            fixVersions: {
+                name: string;
+                released: boolean;
+                releaseDate: string;
+            }[];
             created: string;
             updated: string;
             status: {
