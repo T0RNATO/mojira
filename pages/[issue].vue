@@ -53,9 +53,16 @@ const fixVersions = computed(() => {
 <div v-if="status === 'pending'">
     Loading...
 </div>
-<div v-else-if="status === 'success' && issue">
+<div v-else-if="status === 'success' && issue" class="relative">
     <h1 class="inline">{{issue.key}}</h1>
     <span class="text-2xl">: {{issue.title}}</span>
+    <div class="absolute right-0 top-0">
+        <button class="window !py-1 cursor-pointer">
+            <a :href="'https://report.bugs.mojang.com/servicedesk/customer/portal/2/' + issue.key" target="_blank">
+                Open In Official Viewer
+            </a>
+        </button>
+    </div>
     <hr>
     <div class="md:float-right window min-w-1/4 border-4 dark:border-slate-800 border-slate-100">
         <span class="font-semibold mr-2">By:</span><img :src="issue.reporter.avatarUrl" class="w-4 inline-block mr-2" alt="Avatar">{{issue.reporter.displayName}}<br/>
